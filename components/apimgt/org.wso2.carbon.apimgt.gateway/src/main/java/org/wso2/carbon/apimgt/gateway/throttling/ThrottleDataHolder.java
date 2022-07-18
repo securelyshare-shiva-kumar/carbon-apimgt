@@ -281,7 +281,7 @@ public class ThrottleDataHolder {
     }
 
     private boolean isIpLevelBlocked(String apiTenantDomain, String ip) {
-
+        boolean denyMark = false;
         Set<IPRange> ipRanges = blockedIpConditionsMap.get(apiTenantDomain);
         if (ipRanges != null && ipRanges.size() > 0) {
             log.debug("Tenant " + apiTenantDomain + " contains block conditions");
@@ -292,11 +292,10 @@ public class ThrottleDataHolder {
                             log.debug("Block IP selected for Blocked");
                             return true;
                         }
-                    } else {
-                        if (ipRange.isInvert()) {
-                            log.debug("Block IP selected for Blocked");
-                            return true;
-                        }
+                        return false;
+                    } else if (ipRange.isInvert()) {
+                        log.debug("Continuing to check remaining IPs before Blocking");
+                        denyMark = true;
                     }
                 } else if (APIConstants.BLOCK_CONDITION_IP_RANGE.equals(ipRange.getType())) {
                     BigInteger ipBigIntegerValue = APIUtil.ipToBigInteger(ip);
@@ -307,16 +306,15 @@ public class ThrottleDataHolder {
                             log.debug("Block IPRange selected for Blocked");
                             return true;
                         }
-                    } else {
-                        if (ipRange.isInvert()) {
-                            log.debug("Block IPRange selected for Blocked");
-                            return true;
-                        }
+                        return false;
+                    } else if (ipRange.isInvert()){
+                        log.debug("Continuing to check remaining IP ranges before Blocking");
+                        denyMark = true;
                     }
                 }
             }
         }
-        return false;
+        return denyMark;
     }
 
     /**
