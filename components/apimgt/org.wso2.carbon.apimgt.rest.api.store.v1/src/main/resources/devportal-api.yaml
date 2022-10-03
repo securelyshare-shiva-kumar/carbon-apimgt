@@ -3411,6 +3411,47 @@ paths:
           source: 'curl -k -H "Authorization: Bearer ae4eae22-3f65-387b-a171-d37eaa366fa8"
           -H "Content-Type: application/json" -X POST -d @data.json "https://localhost:9443/api/am/devportal/v2/me/change-password"'
 
+  ######################################################
+  # The "Analytics Search Results" resource APIs
+  ######################################################
+  /analytics/search:
+    post:
+      tags:
+        - AdvancedSearch
+      summary: |
+        Advance search on raw analytics data.
+      description: |
+        This operation provides you ability to search and aggregate on raw analytics data.
+      operationId: searchAnalyticsData
+      requestBody:
+        description: |
+          Elasticsearch query
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AnalyticsSearchRequest'
+        required: true
+      responses:
+        200:
+          description: |
+            OK.
+            Raw analytics response.
+          headers:
+            Content-Type:
+              description: The content type of the body.
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                type: object
+      security:
+        - OAuth2Security:
+          - apim:subscribe
+      x-code-samples:
+        - lang: Curl
+          source: curl -k "https://localhost:9443/api/am/devportal/v2/analytics/search?query=PizzaShackAPI"
+
 components:
   schemas:
     APIList:
@@ -5433,6 +5474,17 @@ components:
           type: array
           items:
             type: string
+    AnalyticsSearchRequest:
+      title: AnalyticsSearchRequest
+      type: object
+      properties:
+        endpoint:
+          type: string
+        index:
+          type: string
+        query:
+          type: object
+          additionalProperties: true
   responses:
     BadRequest:
       description: Bad Request. Invalid request or validation error.

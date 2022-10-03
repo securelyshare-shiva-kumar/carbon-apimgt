@@ -3746,6 +3746,53 @@ paths:
           schema:
             $ref: '#/definitions/Error'
 
+  /analytics/search:
+    post:
+      security:
+      - OAuth2Security:
+        - apim:subscribe
+      operationId: searchAnalyticsData
+      x-wso2-curl: "curl -k -H \"Authorization: Bearer ae4eae22-3f65-387b-a171-d37eaa366fa8\" -H \"Content-Type: application/json\" -X POST -d -d @data.json \"https://localhost:9443/api/am/store/v1/analytics\""
+      x-wso2-request: |
+        POST https://localhost:9443/api/am/store/v1/analytics/search
+        Authorization: Bearer ae4eae22-3f65-387b-a171-d37eaa366fa8
+        {
+
+        }
+      x-wso2-response: "HTTP/1.1 200 OK"
+      summary:
+        Advance search on raw analytics data.
+      description: |
+        This operation provides you ability to search and aggregate on raw analytics data.
+      parameters:
+      - in: body
+        name: body
+        description: |
+          Elasticsearch query
+        required: true
+        schema:
+          type: object
+      tags:
+      - AdvancedSearch
+      responses:
+        200:
+          description:
+            OK.
+          schema:
+            type: object
+          headers:
+            Content-Type:
+              description: |
+                The content of the body.
+              default: application/json
+              type: string
+        400:
+          description: |
+            Bad Request.
+            Invalid request or validation error
+          schema:
+            $ref: '#/definitions/Error'
+
 ######################################################
 # Parameters - required by some of the APIs above
 ######################################################
