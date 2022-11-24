@@ -33,6 +33,11 @@
             org.springframework.web.context.ContextLoaderListener
         </listener-class>
     </listener>
+    <listener>
+        <listener-class>
+            org.wso2.carbon.apimgt.rest.api.store.v1.HttpClientContextListener
+        </listener-class>
+    </listener>
     <servlet>
         <servlet-name>CXFServlet</servlet-name>
         <servlet-class>
